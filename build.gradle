@@ -1,0 +1,111 @@
+plugins {
+    id 'java'
+    //id 'jacoco'
+    //id 'checkstyle'
+    id 'idea'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    //id 'info.solidsoft.pitest' version '1.5.1'
+
+}
+group 'com.nsa.cm6121'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 11
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.logging.log4j:log4j-api:2.7'
+    implementation 'org.apache.logging.log4j:log4j-core:2.7'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.7'
+
+    testImplementation(platform('org.junit:junit-bom:5.7.0'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    testImplementation('org.mockito:mockito-core:2.+')
+    testCompile("org.junit.jupiter:junit-jupiter-params:5.7.0")
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.3'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+}
+
+
+//test configuration
+test{
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+//application configuration
+
+run{
+    standardInput = System.in
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.cm6121.countWord.app.Application'
+    }
+    from sourceSets.main.allSource
+
+}
+
+application {
+    mainClassName = 'com.cm6121.countWord.app.Application'
+
+}
+
+//tool configuration
+//checkstyle {
+//    toolVersion = 8.25
+//    checkstyleMain.enabled = true
+//    checkstyleTest.enabled = false
+//}
+
+//checkstyleMain {
+//configFile = file("${configDir}/checkstyleMain.xml")
+//    maxErrors = 10
+//}
+
+//jacocoTestReport {
+//    reports {
+//        xml.enabled false
+//        csv.enabled false
+//        html.destination file("${buildDir}/jacocoHtml")
+//    }
+//}
+//jacocoTestCoverageVerification {
+//    violationRules {
+//        rule {
+//            element = 'CLASS'
+//            limit {
+//                counter = 'BRANCH'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.5
+//            }
+//            excludes = [
+//                    'com.cm6123.wormhole.app.*'
+//            ]
+//        }
+//    }
+//}
+//check.dependsOn jacocoTestCoverageVerification
+//// create combined task
+task buildAndReport {
+    dependsOn build
+}
+
+//pitest {
+//    targetClasses = ['com.nsa.cm6121.countWord.*']  //by default "${project.group}.*"
+//    //pitestVersion = '1.4.1' //not needed when a default PIT version should be used
+//    threads = 4
+//    outputFormats = ['XML', 'HTML']
+//    timestampedReports = false
+//    junit5PluginVersion = '0.12'
+//
+//}
+//
+//check.dependsOn("pitest") //comment this line out if your build fails with the 'CoverageMinion' error.
+
